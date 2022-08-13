@@ -8,7 +8,7 @@ const pool = new Pool({
   password: '123',
   host: 'localhost',
   database: 'lightbnb'
-})
+});
 /// Users
 
 /**
@@ -24,15 +24,15 @@ const getUserWithEmail = function(email) {
     WHERE users.email = $1;
     `;
 
- return pool
- .query(queryEmail, values)
-  .then((result) => {
-    return result.rows[0];
-  })
-  .catch((err) => {
-    return console.error(err);
-  });
-}
+  return pool
+    .query(queryEmail, values)
+    .then((result) => {
+      return result.rows[0];
+    })
+    .catch((err) => {
+      return console.error(err);
+    });
+};
 exports.getUserWithEmail = getUserWithEmail;
 
 /**
@@ -48,14 +48,14 @@ const getUserWithId = function(id) {
   WHERE users.id = $1;
   `;
   return pool
-  .query(queryId, values)
-  .then((result) => {
-    return result.rows[0]
-  })
-  .catch((err) => {
-    return console.error(err);
-  })
-}
+    .query(queryId, values)
+    .then((result) => {
+      return result.rows[0];
+    })
+    .catch((err) => {
+      return console.error(err);
+    });
+};
 exports.getUserWithId = getUserWithId;
 
 
@@ -65,13 +65,13 @@ exports.getUserWithId = getUserWithId;
  * @return {Promise<{}>} A promise to the user.
  */
 const addUser =  function(user) {
-  const values = [user.name, user.email, user.password]
+  const values = [user.name, user.email, user.password];
  
-  const queryUser =`
+  const queryUser = `
   INSERT INTO users (name, email, password)
   VALUES($1, $2, $3)
   RETURNING *;
-  `
+  `;
   return pool
     .query(queryUser, values)
     .then((result) => {
@@ -80,7 +80,7 @@ const addUser =  function(user) {
     .catch((err) => {
       return console.error(err);
     });
-}
+};
 exports.addUser = addUser;
 
 /// Reservations
@@ -91,7 +91,7 @@ exports.addUser = addUser;
  * @return {Promise<[{}]>} A promise to the reservations.
  */
 const getAllReservations = function(guest_id, limit = 10) {
-  const values = [guest_id, limit]
+  const values = [guest_id, limit];
 
   const queryReservations = `
     SELECT reservations.id, users.name, users.id, properties.thumbnail_photo_url, properties.title, properties.number_of_bedrooms, properties.number_of_bathrooms, properties.parking_spaces, properties.cost_per_night, reservations.start_date, reservations.end_date, avg(rating) as average_rating
@@ -105,15 +105,15 @@ const getAllReservations = function(guest_id, limit = 10) {
     LIMIT $2;
   `;
 
-    return pool
-      .query(queryReservations, values)
-      .then((results) => {
-        return results.rows;
-      })
-      .catch((err) => {
-        return console.error(err);
-      })
-}
+  return pool
+    .query(queryReservations, values)
+    .then((results) => {
+      return results.rows;
+    })
+    .catch((err) => {
+      return console.error(err);
+    });
+};
 exports.getAllReservations = getAllReservations;
 
 /// Properties
@@ -124,7 +124,7 @@ exports.getAllReservations = getAllReservations;
  * @param {*} limit The number of results to return.
  * @return {Promise<[{}]>}  A promise to the properties.
  */
- const getAllProperties = (options, limit = 10) => {
+const getAllProperties = (options, limit = 10) => {
   const queryParams = [];
 
   let queryString = `
@@ -135,8 +135,8 @@ exports.getAllReservations = getAllReservations;
   `;
 
   if (options.city) {
-    queryParams.push(`%${options.city}`)
-    queryString += `AND city LIKE $${queryParams.length}`
+    queryParams.push(`%${options.city}`);
+    queryString += `AND city LIKE $${queryParams.length}`;
   }
 
   if (options.owner_id) {
@@ -170,8 +170,12 @@ exports.getAllReservations = getAllReservations;
 
   return pool
     .query(queryString, queryParams)
-    .then((res) => { return res.rows })
-    .catch((err) => { return console.log(err.message) }); 
+    .then((res) => {
+      return res.rows;
+    })
+    .catch((err) => {
+      return console.log(err.message);
+    });
 };
 
 exports.getAllProperties = getAllProperties;
@@ -191,9 +195,13 @@ const addProperty = function(property) {
 `;
   return pool
     .query(queryAddProperty, values)
-    .then((res) => { return res.rows })
-    .catch((err) => { return console.error(err.message) })
-}
+    .then((res) => {
+      return res.rows;
+    })
+    .catch((err) => {
+      return console.error(err.message);
+    });
+};
 exports.addProperty = addProperty;
 
 
